@@ -11,97 +11,213 @@
 
         <style>
 
-		body{
-			margin:0;
-			overflow: hidden;
-			background: black;
-		}
+        body{
+            margin:0;
+            overflow: hidden;
+            background: black;
+        }
 
-		canvas { 
-			left: 0px;
-			top: 0px;   
-			position: absolute;
-			z-index: -10;         
-		}
+        canvas { 
+            left: 0px;
+            top: 0px;   
+            position: absolute;
+            z-index: -10;         
+        }
+        
+        #toggleChatHistoryBtn{
+            background-color: #3f3f3f;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            z-index: 1; 
+        }
+        
+        #uInput{
+            width: 40%;
+            height: 80px;
+            padding: 12px 20px;
+            margin: 11px 10px;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 25px;
+        }
+        
+        #SayIt{
+            width: 50%;
+            max-width: 150px;
+            min-width: 75px;
+            background-color: #4caf50;
+            color: white;
+            padding: 11px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin:0 auto 10px;
+            display:inline-block;
+            font-weight: 900;
+            font-size: 16px;
+        }
 
+        #chatHistory{
+            background-color: #2f2f2f;
+            border-width: 1px;
+            border-color: black;
+            border-style: solid;
+            padding: 10px;
+            display: none;
+            position: absolute;
+            max-height: 80%;
+            max-width: 320px;
+            overflow: scroll;
+        }
+
+        .mrGoodBotSaid{
+            color: blue;
+            border: 2px solid darkgray;
+            background-color: #aaaaaa;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            display:block;
+        }
+        
+        .mrGoodBotSaid::before {
+            color: black;
+            content: "Mr. GoodBot: ";
+        }  
+        
+        .userSaid{
+            color: green;
+            display:block;
+            border: 2px solid lightgray;
+            background-color: #aaaaaa;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+
+        }
+        
+        .userSaid::before {
+            color: black;
+            content: "You: ";
+        }  
         </style>
     </head>
-    <body> 
+    <body>
+    
+        <button id='toggleChatHistoryBtn' onclick="ToggleChatHistory()">Chat History</button>
+        <div id='chatHistory'>
+        </div>
 
-		<div id='face'>
-			<div id='brows'>
-				<img style='display:none;' id="brow0" src="./skins/Default/eyebrows_left_curve_raised.png">
-				<img style='display:none;' id="brow1" src="./skins/Default/eyebrows_left_raised.png">
-				<img style='display:none;' id="brow2" src="./skins/Default/eyebrows_rightleft_curve_raised.png">
-				<img style='display:none;' id="brow3" src="./skins/Default/eyebrows_rightleft_curve_raised_up.png">
-				<img style='display:none;' id="brow4" src="./skins/Default/eyebrows_right_curve_raised.png">
-				<img style='display:none;' id="brow5" src="./skins/Default/eyebrows_right_raised.png">
-			</div>
-			<div id='eyes'>
-				<img style='display:none;' id="eye0" src="./skins/Default/eyes_closed.png">
-				<img style='display:none;' id="eye1" src="./skins/Default/eyes_open_center.png">
-				<img style='display:none;' id="eye2" src="./skins/Default/eyes_open_down.png">
-				<img style='display:none;' id="eye3" src="./skins/Default/eyes_open_half_left.png">
-				<img style='display:none;' id="eye4" src="./skins/Default/eyes_open_half_right.png">
-				<img style='display:none;' id="eye5" src="./skins/Default/eyes_open_left.png">
-				<img style='display:none;' id="eye6" src="./skins/Default/eyes_open_right.png">
-				<img style='display:none;' id="eye7" src="./skins/Default/eyes_open_up.png">
-			</div>
-			<div id='noses'>
-				<img style='display:none;' id="nose0" src="./skins/Default/nose_center.png">
-			</div>
-			<div id='mouths'>
-				<img style='display:none;' id="mouth0" src="./skins/Default/mouth_happy.png">
-				<img style='display:none;' id="mouth1" src="./skins/Default/mouth_neutral.png">
-				<img style='display:none;' id="mouth2" src="./skins/Default/mouth_smile.png">
-			</div>
-		</div>
 
-		<center>
-			<canvas id="myCanvas"></canvas>
-		</center>
+        <center>
+            <div id='chat'>
+            <input type="text" id="uInput" name="uInput" placeholder='Say something... Does NOT work yet!'>
+            <button id='SayIt' onclick=''><span style='font-size:25px;'>&#128488;</span><br>Say it</button>
+            </div>
+        </center>
 
-		<script language="javascript" type="text/javascript">
+        <div id='face'>
+            <div id='brows'>
+                <img style='display:none;' id="brow0" src="./skins/Default/eyebrows_left_curve_raised.png">
+                <img style='display:none;' id="brow1" src="./skins/Default/eyebrows_left_raised.png">
+                <img style='display:none;' id="brow2" src="./skins/Default/eyebrows_rightleft_curve_raised.png">
+                <img style='display:none;' id="brow3" src="./skins/Default/eyebrows_rightleft_curve_raised_up.png">
+                <img style='display:none;' id="brow4" src="./skins/Default/eyebrows_right_curve_raised.png">
+                <img style='display:none;' id="brow5" src="./skins/Default/eyebrows_right_raised.png">
+            </div>
+            <div id='eyes'>
+                <img style='display:none;' id="eye0" src="./skins/Default/eyes_closed.png">
+                <img style='display:none;' id="eye1" src="./skins/Default/eyes_open_center.png">
+                <img style='display:none;' id="eye2" src="./skins/Default/eyes_open_down.png">
+                <img style='display:none;' id="eye3" src="./skins/Default/eyes_open_half_left.png">
+                <img style='display:none;' id="eye4" src="./skins/Default/eyes_open_half_right.png">
+                <img style='display:none;' id="eye5" src="./skins/Default/eyes_open_left.png">
+                <img style='display:none;' id="eye6" src="./skins/Default/eyes_open_right.png">
+                <img style='display:none;' id="eye7" src="./skins/Default/eyes_open_up.png">
+            </div>
+            <div id='noses'>
+                <img style='display:none;' id="nose0" src="./skins/Default/nose_center.png">
+            </div>
+            <div id='mouths'>
+                <img style='display:none;' id="mouth0" src="./skins/Default/mouth_happy.png">
+                <img style='display:none;' id="mouth1" src="./skins/Default/mouth_neutral.png">
+                <img style='display:none;' id="mouth2" src="./skins/Default/mouth_smile.png">
+            </div>
+        </div>
 
-		var canvas = document.getElementById("myCanvas");
-		var context = canvas.getContext("2d");
+        <center>
+            <canvas id="myCanvas"></canvas>
+        </center>
+        
+        <script language="javascript" type="text/javascript">
 
-		var brows = document.getElementById("brows").querySelectorAll("img");
-		var eyes = document.getElementById("eyes").querySelectorAll("img");
-		var noses = document.getElementById("noses").querySelectorAll("img");
-		var mouths = document.getElementById("mouths").querySelectorAll("img");
+        var canvas = document.getElementById("myCanvas");
+        var context = canvas.getContext("2d");
+        
+        var chatHistory = document.getElementById('chatHistory');
 
-		window.onload = function ()
-		{
-			UpdateFace();
-		}
+        var brows = document.getElementById("brows").querySelectorAll("img");
+        var eyes = document.getElementById("eyes").querySelectorAll("img");
+        var noses = document.getElementById("noses").querySelectorAll("img");
+        var mouths = document.getElementById("mouths").querySelectorAll("img");
 
-		function UpdateFace(){
+        window.onload = function (){
+            UpdateFace();
+        }
 
-			// in case of size or orientation change
-			// Resize canvas
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
+        function UpdateFace(){
 
-			// Select Face Elements
-			var brow = brows[Math.floor(Math.random() * brows.length)];
-			var eye = eyes[Math.floor(Math.random() * eyes.length)];
-			var nose = noses[Math.floor(Math.random() * noses.length)];
-			var mouth = mouths[Math.floor(Math.random() * mouths.length)];
-			
-			// Draw/Update Face
-			context.drawImage(eye, 0, 0, eye.naturalWidth, eye.naturalHeight, 0, 0, window.innerWidth, window.innerHeight);
-			context.drawImage(brow, 0, 0, brow.naturalWidth, brow.naturalHeight, 0, 0, window.innerWidth, window.innerHeight);
-			context.drawImage(nose, 0, 0, nose.naturalWidth, nose.naturalHeight, 0, 0, window.innerWidth, window.innerHeight);
-			context.drawImage(mouth, 0, 0, mouth.naturalWidth, mouth.naturalHeight, 0, 0, window.innerWidth, window.innerHeight);
+            // in case of size or orientation change
+            // Resize canvas
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
 
-			// timeout for next frame of the face animation
-			// 1 frame every 1.5 seconds
-			// 60 seconds / 1.5 seconds per frame = 40 frames a minute
-			window.setTimeout(UpdateFace, 1.5*1000);
-		}
+            // Select Face Elements
+            var brow = brows[Math.floor(Math.random() * brows.length)];
+            var eye = eyes[Math.floor(Math.random() * eyes.length)];
+            var nose = noses[Math.floor(Math.random() * noses.length)];
+            var mouth = mouths[Math.floor(Math.random() * mouths.length)];
+            
+            // Draw/Update Face
+            context.drawImage(eye, 0, 0, eye.naturalWidth, eye.naturalHeight, 0, 0, window.innerWidth, window.innerHeight);
+            context.drawImage(brow, 0, 0, brow.naturalWidth, brow.naturalHeight, 0, 0, window.innerWidth, window.innerHeight);
+            context.drawImage(nose, 0, 0, nose.naturalWidth, nose.naturalHeight, 0, 0, window.innerWidth, window.innerHeight);
+            context.drawImage(mouth, 0, 0, mouth.naturalWidth, mouth.naturalHeight, 0, 0, window.innerWidth, window.innerHeight);
 
-		</script>
+            // timeout for next frame of the face animation
+            // 1 frame every 1.5 seconds
+            // 60 seconds / 1.5 seconds per frame = 40 frames a minute
+            window.setTimeout(UpdateFace, 1.5*1000);
+        }
+        
+        
+        function ToggleChatHistory(){
+            var x = document.getElementById("chatHistory");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+        
+        
+        // Add Foobar to Chat History
+        var mrGoodBotSaid = document.createElement('span')
+        mrGoodBotSaid.innerHTML = 'Foobar';
+        mrGoodBotSaid.classList.add("mrGoodBotSaid");
+        chatHistory.appendChild(mrGoodBotSaid);    
 
-	</body>
+        </script>
+        
+        
+
+    </body>
 </html>
