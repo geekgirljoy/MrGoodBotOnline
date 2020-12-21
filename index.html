@@ -3,8 +3,8 @@
     <head>
         <title>Mr. GoodBot</title>
 
-        <script language="javascript" type="text/javascript" src="elizabot.js"></script>
-        <script language="javascript" type="text/javascript" src="elizadata.js"></script>
+        <script language="javascript" type="text/javascript" src="js/elizabot.js"></script>
+        <script language="javascript" type="text/javascript" src="js/elizadata.js"></script>
 
         <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
         <meta content="utf-8" http-equiv="encoding">
@@ -118,8 +118,8 @@
 
         <center>
             <div id='chat'>
-            <input type="text" id="uInput" name="uInput" placeholder='Say something... Does NOT work yet!'>
-            <button id='SayIt' onclick=''><span style='font-size:25px;'>&#128488;</span><br>Say it</button>
+            <input type="text" id="uInput" name="uInput" placeholder='Say something...'>
+            <button id='SayIt' onclick='elizaStep()'><span style='font-size:25px;'>&#128488;</span><br>Say it</button>
             </div>
         </center>
 
@@ -167,9 +167,15 @@
         var eyes = document.getElementById("eyes").querySelectorAll("img");
         var noses = document.getElementById("noses").querySelectorAll("img");
         var mouths = document.getElementById("mouths").querySelectorAll("img");
+        
+        var eliza = new ElizaBot();
+        var elizaLines = new Array();
+
 
         window.onload = function (){
+            elizaReset();
             UpdateFace();
+            chatHistory.style.display = "block";
         }
 
         function UpdateFace(){
@@ -196,8 +202,7 @@
             // 60 seconds / 1.5 seconds per frame = 40 frames a minute
             window.setTimeout(UpdateFace, 1.5*1000);
         }
-        
-        
+                
         function ToggleChatHistory(){
             var x = document.getElementById("chatHistory");
             if (x.style.display === "none") {
@@ -208,13 +213,65 @@
             chatHistory.scrollTop = chatHistory.scrollHeight;
         }
         
-        
-        // Add Foobar to Chat History
-        var mrGoodBotSaid = document.createElement('span')
-        mrGoodBotSaid.innerHTML = 'Foobar';
-        mrGoodBotSaid.classList.add("mrGoodBotSaid");
-        chatHistory.appendChild(mrGoodBotSaid);    
+            
+        function elizaReset() {
+            eliza.reset();
+            elizaLines.length = 0;
+            elizaStep();
+        }
+            
+            
+        function elizaStep() {
 
+            var userinput = uInput.value;
+            
+            if (eliza.quit) {
+                userinput.value = '';
+                
+                if (confirm("This session is over.\nStart over?")) elizaReset();
+                return;
+            }
+            else if (userinput != '') {
+                    
+                
+                var userSaid = document.createElement('span')
+                userSaid.innerHTML = userinput;
+                userSaid.classList.add("userSaid");
+                chatHistory.appendChild(userSaid);    
+                    
+            
+                 var response = eliza.transform(userinput);
+                  
+                 
+                // no input and no saved lines -> output initial
+                var mrGoodBotSaid = document.createElement('span')
+                mrGoodBotSaid.innerHTML = response;
+                mrGoodBotSaid.classList.add("mrGoodBotSaid");
+                chatHistory.appendChild(mrGoodBotSaid);    
+
+                
+                var usr = 'YOU:   ' + userinput;
+                var rpl ='ELIZA: ' + response;
+                elizaLines.push(usr);
+                elizaLines.push(rpl);        
+            }
+            else if (elizaLines.length == 0) {
+            
+                var response = eliza.getInitial();
+                
+                // no input and no saved lines -> output initial
+                var mrGoodBotSaid = document.createElement('span')
+                mrGoodBotSaid.innerHTML = response;
+                mrGoodBotSaid.classList.add("mrGoodBotSaid");
+                chatHistory.appendChild(mrGoodBotSaid);    
+
+                elizaLines.push('ELIZA: ' + response);
+            }
+            userinput.value = '';
+            uInput.value = '';
+            
+             chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
         </script>
         
         
